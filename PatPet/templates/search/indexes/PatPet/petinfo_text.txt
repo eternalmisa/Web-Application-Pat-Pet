@@ -1,0 +1,5 @@
+dog
+{{ object.breed}}
+{{ object.name}}
+{{ object.color}}
+{{ object.gender}}

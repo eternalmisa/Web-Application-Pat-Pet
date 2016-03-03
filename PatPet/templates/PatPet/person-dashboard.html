@@ -1,0 +1,64 @@
+<!doctype html>
+{% extends "PatPet/base.html" %}
+{% block css %}
+    <link href="/static/PatPet/css/person-dashboard.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/PatPet/css/messenger.css">
+{% endblock %}
+
+{% block content %}
+<input type="hidden" id="username" value={{ request.user.username }}>
+<div class="container">
+    <div class="col-md-3">
+        <div class="basic_info">
+            {%if info.is_third == "1"%}
+                <img src="{{info.person_avatar }}" class="center-block">
+            {% else %}
+                <img src="/media/{{info.person_avatar}}" class="center-block">
+            {% endif %}
+            <h3 style="text-align: center">{{ request.user.username }}</h3>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="message">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="col-sm-5">Pending Messages</span>
+                </div>
+                <div class="pending-message panel-body">
+                </div>
+            </div>
+        </div>
+        <div class="message">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="col-sm-5">All Messages</span>
+                    </div>
+                <div class="all-message panel-body"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javaScript %}
+        {% load socketio_tags %}
+        {% socketio %}
+        <script type="text/javascript" src="/static/PatPet/js/person-dashboard.js"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+{% endblock %}
+{% block messeage_window %}
+<div class="mess_bound hide draggable">
+    <div class="mess_topbar">
+        <button type="button" class="close_btn"></button>
+        <div class="clear"></div>
+    </div>
+    <div class="mess_content">
+        <ul>
+        </ul>
+    </div>
+    <div class="mess_panel">
+        <textarea placeholder="Say Something..."></textarea>
+        <button type="button" class = "send_mess_btn" disabled> Send</button>
+        <button type="button" class = "send_videorequest_btn"></button>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,248 @@
+<!doctype html>
+{% extends "PatPet/base.html" %}
+{% block css %}
+<link rel="stylesheet" href="/static/PatPet/css/transaction.css">
+<link rel="stylesheet"  href="/static/PatPet/css/external/zoom.css" media="all" />
+<link href="/static/PatPet/css/external/font-awesome.css" rel="stylesheet" />
+<link href="/static/PatPet/css/record_video.css" rel="stylesheet" type="text/css" media="all">
+{% endblock %}
+    
+{% block content %}
+<h1 class="title">Transaciton for {{activity.pet.name}}</h1>
+<div class="bs-example col-md-offset-1 col-md-10" data-example-id=contextual-panels>
+    <div class="panel panel-primary">
+        <div class=panel-heading>
+            <h3 class=panel-title>Transaction Detail</h3>
+        </div>
+        <div class=panel-body>
+            <div class = "col-md-4">
+                <a href="{%url 'pet_profile' activity.pet.id%}"><img src= "/media/{{activity.pet.pet_avatar}}"id="pet-image" alt="Chania" width="230" height="250"></a>
+            </div>
+            <div class="col-md-8">
+                <table class="table" style="margin-top:20px;">
+                    <tr>
+                        <td>Time</td>
+                        <td contenteditable="true">{{activity.status.starttime}}-{{activity.status.endtime}}</td>
+                    </tr>
+                        <td>Status</td>
+                        <td contenteditable="true">{{activity.status.statusText}}</td>
+                    <tr>
+                        <td>Pet</td>
+                        <td contenteditable="true">{{activity.pet.name}}</td>
+                    </tr>
+                    <tr>
+                        <td>Owner</td>
+                        <td contenteditable="true">{{activity.owner.user.username}}</td>
+                    </tr>
+                    <tr>
+                        <td>Renter</td>
+                        <td contenteditable="true">{{activity.renter.user.username}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-success">
+        <div class=panel-heading>
+            <h3 class=panel-title>Photos</h3>
+        </div>
+        <div class=panel-body>
+            {% if photos != 'no'%}
+                <ul class="gallery">
+                    {% for photo in photos %}
+                        <li>
+                            <a href="/media/{{photo.moment_photo}}"><img src="/media/{{photo.moment_photo}}" width="150" height="150"></a>
+                            <button class="delete_photo_btn" onclick="location.href='{% url 'delete_photo' 1 photo.id %}';"></button>
+                        </li>
+
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {% if photos == 'no'%}
+                <p> There are no photos currently</p>
+            {% endif %}
+
+            <form action="{% url 'upload_transaction_images' activity.id%}" method="POST" enctype="multipart/form-data">
+                {% for field in photoForm.visible_fields %}
+                    {{field}}
+                    {% for error in field.errors%}
+                        <p> {{error}} </p>
+                    {% endfor %}
+                    {% for error in photoForm.non_field_errors %}
+                         <p>{{error}}</p>
+                    {% endfor %}
+                {% endfor %}
+                <button type="submit" align="center" class="btn btn-danger" style="margin-top:5%; margin-left:80%">Submit</button>
+            {% csrf_token %}
+            </form>
+        </div>
+    </div>
+    <div class="panel panel-info">
+        <div class=panel-heading>
+            <h3 class=panel-title>Videos</h3>
+        </div>
+        <div class=panel-body>
+            <div>
+            {% if videos != 'no' %}
+                <ul class="gallery">
+                {% for video in videos %}
+                    <li>
+                        <video src="/media/{{video.moment_video}}" width="220" height="180"controls></video>
+                        <button class="delete_photo_btn" onclick="location.href='{% url 'delete_video' 1 video.id %}';"></button>
+                    </li>
+
+                {% endfor %}
+                </ul>
+            {% endif %}
+            {% if videos == 'no'%}
+                <p> There are no videos currently</p>
+            {% endif %}
+
+            <form action="{% url 'upload_transaction_videos' activity.id %}" method="POST" enctype="multipart/form-data">
+                {% for field in videoForm.visible_fields %}
+                    {{field}}
+                    {% for error in field.errors%}
+                        <p>{{error}}</p>
+                    {% endfor %}
+                {% endfor %}
+
+                <button type="submit" align="center" class="btn btn-danger" style="margin-top:5%; margin-left:80%">Submit</button>
+                {% csrf_token %}
+            </form>
+            </div>
+            <div>
+            <div class="row">
+                <div class="all_box center-block">
+                    <div id='open-camera'>
+                         <button id="camera-me" class="camera-btn"></button>
+                    </div>
+
+                    <h4 id="recording" style="display:none;" class="center-block">  Recording...</h4>
+                    <div id='camera_display' style="display: none;">
+                        <video id="videos" autoplay></video><br>
+                        <span><button id="record-me" class="record-btn"></button></span>
+                        <span><button id="stop-me" class="pause-btn" disabled=""></button></span>
+                        <span><button id="close_record_btn" class="close-video-btn"></button></span>
+                    </div>
+
+                    <div id="video-preview" style="display:none">
+                        <button id="close_preview_btn" class="close-video-btn"></button>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="panel panel-warning">
+        <div class=panel-heading>
+            <h3 class=panel-title>Happy Moments</h3>
+        </div>
+        <p class="bg-danger" id="moment-err"></p>
+        <div class=panel-body>
+            <div class="col-md-4">
+                <div class="card card-user" style="margin-left:60px">
+                    <div class="image" style="z-index: 1;">
+                        <img src="/static/PatPet/images/background.jpg" alt="background" style="width:525px;height:250px;z-index: 1;">
+                    </div>
+                    <div class="content" style="z-index: 4;">
+                        <div class="author">
+                            <a href="{%url 'person_profile' renter.id%}">
+                                {%if renter.person_info.is_third == "1"%}
+                                    <img class="avatar border-gray" src="{{renter.person_info.person_avatar}}" alt="profile" style="width:125px;height:125px;margin-top:-50px;margin-left:70%;z-index: 4;">
+                                {% else %}
+                                    <img class="avatar border-gray" src="/media/{{renter.person_info.person_avatar}}" alt="profile" style="width:125px;height:125px;margin-top:-50px;margin-left:70%;z-index: 4;">
+                                {% endif %}
+                                <h4 class="title"><br/><p align="center">{{renter.username}}</p></h4>
+                            </a>
+                        </div>
+                        <p class="description text-center"> {{renter.person_info.person_bio}} <br><br></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-offset-1 col-md-6">
+                <div class="row">
+                    <div class="col-md-11">
+                         <div class="form-group col-md-offset-1">
+                            <button type="button" class="btn btn-default btn-lg" style="margin-left:18%" onclick="openbox()">
+                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>Share your moments?
+                            </button>
+                            <div id="moment_area" style="width:500px;height:200px;display:none;">
+                                <!--<form class="moment-form" action="/upload_moment_content/{{activity.id}}" method="POST">-->
+                                    <textarea id="moment_text" name="moment_text" style="resize: none;width:65%;border-radius:5%;height:100px;margin-left:20px;margin-top:20px"{% if not activity.moment %}placeholder="Write your Happy Moment"{% endif %}>{% if activity.moment %}{{activity.moment.content}}{% endif %}</textarea>
+                                    <button align="center" id="moment-btn" class="btn btn-danger" onclick="addmoment({{activity.id}})">Submit</button>
+                            </div>
+                             <ul class="moment-list list-group" data="{{item.id}}" id = "moment-list-{{activity.id}}">
+                                 {% for content in contents %}
+                                     <li class="list-group-item list-group-item-warning" id="moment-{{content.id}}">
+                                          <button class="delete_photo_btn" id="del_btn-{{content.id}}" style="padding-right:10%" onclick="deletemoment({{activity.id}},{{content.id}})"></button><br/>
+                                         {{content.timestamp}}<br/>
+                                         {{content.content}}
+                                     </li>
+                                 {% endfor %}
+                             </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-danger">
+        <div class=panel-heading>
+            <h3 class=panel-title>Review & Rate</h3>
+        </div>
+        {% for error in errors %}
+            <p class="bg-danger err-msg"><span class="glyphicon glyphicon-exclamation-sign"></span>
+            {{error}}
+        {% endfor %}
+        {% for message in messages %}
+            <p class="bg-success"><span class="glyphicon glyphicon-exclamation-sign"></span>
+            {{message}}
+        {% endfor%}
+        <div class=panel-body>
+            <div class="bs-example bs-example-tabs" data-example-id="togglable-tabs">
+                <ul id="myTabs" class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#pet-review" id="pet-review-tab" role="tab" data-toggle="tab" aria-controls="pet-review" aria-expanded="true">About Pet</a></li>
+                    <li role="presentation"><a href="#owner-review" role="tab" id="owner-review-tab" data-toggle="tab" aria-controls="owner-review">About Owner</a></li>
+                </ul>
+                <form action="/renter_submit_review/{{activity.id}}" method="POST">
+                    <div id="myTabContent" class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade in active" id="pet-review" aria-labelledBy="home-tab" style="margin-top:30px; margin-left:170px" onclick="func1()">
+                            <span class="star-rating col-md-offset-4 col-md-6">
+                                <input id="p1" class="radio_pet" type="radio" name="rating" value="1"><i></i>
+                                <input id="p2" class="radio_pet" type="radio" name="rating" value="2"><i></i>
+                                <input id="p3" class="radio_pet" type="radio" name="rating" value="3"><i></i>
+                                <input id="p4" class="radio_pet" type="radio" name="rating" value="4"><i></i>
+                                <input id="p5" class="radio_pet" type="radio" name="rating" value="5"><i></i>
+                                <input class="radio_pet" type="hidden" name="pet_rating" id="input_hidden1">
+                            </span><br/>
+                            <textarea name="review_pet" class="col-md-offset-3 col-md-6" cols="40" rows="6" style="resize:none;margin-top:50px;margin-left:170px;font-size:20px"> </textarea>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="owner-review" aria-labelledBy="profile-tab"  style="margin-top:30px; margin-left:170px">
+                            <span class="star-rating col-md-offset-4 col-md-6">
+                                <input id="o1" class="radio_owner" type="radio" name="rating" value="1"><i></i>
+                                <input id="o2" class="radio_owner" type="radio" name="rating" value="2"><i></i>
+                                <input id="o3" class="radio_owner" type="radio" name="rating" value="3"><i></i>
+                                <input id="o4" class="radio_owner" type="radio" name="rating" value="4"><i></i>
+                                <input id="o5" class="radio_owner" type="radio" name="rating" value="5"><i></i>
+                                <input class="radio_owner" type="hidden" name="owner_rating" id="input_hidden2">
+                            </span><br/>
+                            <textarea name="review_owner" class="col-md-offset-3 col-md-6" cols="40" rows="6" style="resize:none;margin-top:50px;margin-left:170px;font-size:20px"></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" align="center" class="btn btn-danger" style="margin-top:20px; margin-left:380px">Submit</button>
+                {% csrf_token %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javaScript %}
+    <script src="/static/PatPet/js/transaction.js"></script>
+    <script src="/static/PatPet/js/external/zoom.min.js"></script>
+    <script src="/static/PatPet/js/external/whammy.min.js"></script>
+    <script src="/static/PatPet/js/record-video.js"></script>
+{% endblock %}

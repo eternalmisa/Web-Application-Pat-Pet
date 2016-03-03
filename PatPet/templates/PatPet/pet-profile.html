@@ -1,0 +1,374 @@
+<!doctype html>
+{% extends "PatPet/base.html" %}
+{% block css %}
+        <link rel="stylesheet" href="/static/PatPet/css/messenger.css">
+        <link rel="stylesheet" href="/static/PatPet/css/pet-profile.css" rel="stylesheet">
+        <link href="/static/PatPet/bootstrap/css/bootstrap-datepicker.css" rel="stylesheet">
+        <link rel="stylesheet"  href="/static/PatPet/css/external/zoom.css" media="all" />
+        <link href="/static/PatPet/css/external/font-awesome.css" rel="stylesheet" />
+        <link href="/static/PatPet/css/record_video.css" rel="stylesheet" type="text/css" media="all">
+{% endblock %}
+
+{% block content %}
+<div class = "pet_show">
+    <div class="col-md-6 wrapper">
+        <div id="profile" class="wrapper">
+            <img id="pet_avatar" src="/media/{{ pet.pet_avatar}}" class="center-block" alt="photo">
+            <a href="{%url 'person_profile' pet_owner.id%}">
+                {%if pet_owner_info.is_third == "1"%}
+                      <img src="{{pet_owner_info.person_avatar}}" class="owner_avatar img-circle">
+                {% else %}
+                      <img src="/media/{{pet_owner_info.person_avatar}}" class="owner_avatar img-circle">
+                 {% endif %}
+            </a>
+        </div>
+        {% if pet_owner == request.user %}
+            <form enctype="multipart/form-data" action="{% url 'pet_profile' pet.id%}" method="post" class="change_avatar">
+                <input class="hidden" name="avatar">
+                <input type="file" name="img" id="upload_picture" style="display:none;">
+                    <a href="" onclick="document.getElementById('upload_picture').click();return false;">
+                        <span class="glyphicon glyphicon-picture"></span>
+                    </a>
+                <span><button class="btn btn-sm btn-danger" id="edit_avatar_btn"> Save </button></span>
+                {% csrf_token %}
+            </form>
+            <p style="color: red;">{{error}}</p>
+        {% endif %}
+        <div class="clear"></div>
+    </div>
+    <div class="col-md-6 wrapper interests">
+        <h1 style="color: #ffffff">Hi, I am {{pet.name}}!</h1>
+        <div class="my-info">
+            <p>
+                Rating: <span class="glyphicon glyphicon-star rating">{{rating}} </span>
+                Reviews:
+                {% if reviews_num %}
+                    <span class="rating"> ({{reviews_num}}) </span><br/>
+                {% else %}
+                    <span class="rating"> (0) </span><br/>
+                {% endif %}
+                <br/><img src="/static/PatPet/images/icons/dog-icon.png" class="img-circle icon">
+                    My profile has been viewed for <span class="review"> {{viewed_times}} </span>  times
+                    <img src="/static/PatPet/images/icons/dog-icon.png" class="img-circle icon">
+            </p>
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+
+<div id="main" data-spy="scroll" data-target=".navbar" data-offset="50">
+    <div class="col-sm-offset-1 col-md-9">
+        <nav class="navbar navbar-inverse" id="bar2">
+            <div class="container-fluid">
+                <div class="navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#basic">Basic Information</a></li>
+                        <li><a href="#more">More Information</a></li>
+                        <li><a href="#history">Transaction History</a></li>
+                        <li><a href="#reviews">Reviews</a></li>
+                        <li><a href="#location">Location</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    <div id="basic" class="container-fluid">
+        <h3>Basic Information</h3>
+        {% if pet_owner == request.user %}
+            <button class="btn btn-sm btn-danger edit_basic_btn" style="float: right"> Edit Basic Info</button>
+        {% endif %}
+        <br><br>
+        <div class="pet_basic_info">
+            {% for field in PetBasicForm.visible_fields %}
+                {% if not field.name == "name" and not field.name == "pet_avatar" %}
+                <div class="col-md-9">
+                    <img src="/static/PatPet/images/icons/dog-icon.png" class="img-circle icon"> &nbsp;
+                    <span ><label>My {{ field.label }} is: </label></span>
+                    <span > {{ field.value}} </span><br>
+                </div>
+                {% endif %}
+            {% endfor %}
+
+        </div>
+        <div class="edit_pet_basic_info">
+            <form class="edit_profile_form form-horizontal" id="edit_basic_form"method="post" action="{% url 'pet_profile' pet.id%}">
+                <input class="hidden" name="basic">
+                {% for field in PetBasicForm.visible_fields %}
+                    {% if not field.name == "name" and not field.name == "pet_avatar" %}
+                    <div class="col-md-9">
+                       <span class="col-sm-4"><label>{{ field.label }}</label></span>
+                       <span class="col-sm-8"><input type="{{ field.field.widget.input_type }}" class="form-control" name="{{ field.name }}" value="{{ field.value}}"></span>
+                       <div style="color: red">{{field.errors}}</div>
+                    </div><br/>
+                    {%endif%}
+                {% endfor %}
+                <div id="error_flag" class="hidden">{{error_flag}}</div>
+                {% csrf_token %}
+                <br>
+                <button class="btn btn-sm btn-danger">Save</button>
+            </form>
+        </div>
+    </div><br>
+    <div class="line"></div>
+    <div id="more" class="container-fluid">
+        <h3>More Information</h3>
+        {% if pet_owner == request.user %}
+            <form enctype="multipart/form-data" class="float_right edit_media_form" action="{% url 'pet_profile' pet.id%}" method="post">
+                <input class="hidden" name="media">
+                <input type="file" name="pet_photo" id="upload_photo" style="display:none;">
+                    <a href="" onclick="document.getElementById('upload_photo').click();return false;">
+                        <div class="glyphicon glyphicon-picture"></div>
+                    </a>
+                <input type="file" name="pet_video" id="upload_video" style="display:none;">
+                    <a href="" onclick="document.getElementById('upload_video').click();return false;">
+                        <div class="glyphicon glyphicon-film"></div>
+                    </a>
+                {% for field in PetMediaForm.visible_fields%}
+                    {% for error in field.errors %}
+                        <p class="bg-danger err-msg"><span class="glyphicon glyphicon-exclamation-sign"></span>{{error}}</p>
+                    {% endfor %}
+                {% endfor %}
+                <div><button class="btn btn-sm btn-danger edit_media_btn"> Upload </button></div>
+                {% csrf_token %}
+            </form>
+            {% endif %}
+
+
+        <div class="more-info"><br>
+            <div class="avatar row">
+                <ul class="gallery">
+                {% for photo in photos %}
+                    {% if photo.pet_photo %}
+                    <li>
+                        <a href="{{photo.pet_photo.url}}"><img src="{{photo.pet_photo.url}}"/></a>
+                        {% if pet_owner == request.user %}
+                        <button class="delete_photo_btn" onclick="location.href='{% url 'delete_photo' 0 photo.id %}';"></button>
+                        {% endif %}
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
+            <div class="row">
+                <ul class="gallery">
+                {% for video in videos %}
+                    {% if video.pet_video %}
+                    <li>
+                        <video controls class="video">
+                            <source src="{{video.pet_video.url}}" type="video/mp4"/>
+                        </video>
+                        {% if pet_owner == request.user %}
+                        <button class="btn btn-sm btn-default delete_video_btn center-block"  onclick="location.href='{% url 'delete_video' 0 video.id %}';"></button>
+                        {% endif %}
+                    </li>
+                {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
+            {% if pet_owner == request.user %}
+            <div class="row">
+                <div class="all_box center-block">
+                    <div id='open-camera'>
+                         <button id="camera-me" class="camera-btn"></button>
+                    </div>
+
+                    <h4 id="recording" style="display:none;" class="center-block">  Recording...</h4>
+                    <div id='camera_display' style="display: none;">
+                        <video id="videos" autoplay></video><br>
+                        <span><button id="record-me" class="record-btn"></button></span>
+                        <span><button id="stop-me" class="pause-btn" disabled=""></button></span>
+                        <span><button id="close_record_btn" class="close-video-btn"></button></span>
+                    </div>
+
+                    <div id="video-preview" style="display:none">
+                        <button id="close_preview_btn" class="close-video-btn"></button>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+    <div class="line"></div>
+    <div id="reviews" class="container-fluid">
+        <h3>Reviews</h3>
+        <ul>
+           {% for review in reviews %}
+            <li>
+                <div class="review col-md-12">
+                <div class="col-md-2">
+                    <a href="{%url 'person_profile' review.commenter.id%}">
+                        {%if review.commenter.person_info.is_third == "1"%}
+                            <img src="{{review.commenter.person_info.person_avatar}}" class="img-circle preview_photo">
+                        {% else %}
+                            <img src="/media/{{review.commenter.person_info.person_avatar}}" class="img-circle preview_photo">
+                        {% endif %}
+                        <p class="user_name col-sm-offset-3">{{review.commenter.username }}</p></a>
+                </div>
+                <div class="review_content col-md-8">
+                    <div class="grumble_text">
+                        {{ review.content }}
+                    </div>
+                    <div><span class="time">{{ review.timestamp }}</span></div>
+                </div>
+            </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="line"></div>
+    <div id="history" class="container-fluid">
+        <h3>Transaction History</h3>
+        <div class="note">
+            <ul>
+            {% for transaction in transactions %}
+                {% if pet_owner == request.user %}
+                <li>
+                    <a href="{% url 'transaction_owner' transaction.id %}">
+                        <div class="transaction2">
+                            <img src="/media/{{ transaction.pet.pet_avatar }}" class="dog_photo">
+                            <p>{{ transaction.moment.content }}</p>
+                            <p class="time float_right">{{ transaction.moment.timestamp }}</p>
+                            <div class="clear_float"></div>
+                        </div>
+                    </a>
+                </li>
+                {% elif transaction.renter.user == request.user %}
+                <li>
+                    <a href="{% url 'transaction_renter' transaction.id %}">
+                        <div class="transaction2">
+                            <img src="/media/{{ transaction.pet.pet_avatar }}" class="dog_photo">
+                            <p>{{ transaction.moment.content }}</p>
+                            <p class="time float_right">{{ transaction.moment.timestamp }}</p>
+                            <div class="clear_float"></div>
+                        </div>
+                    </a>
+                </li>
+                {% else %}
+                <li>
+                    <a href="{% url 'transaction_visitor' transaction.id%}">
+                        <div class="transaction2">
+                            <img src="/media/{{ transaction.pet.pet_avatar }}" class="dog_photo">
+                            <p>{{ transaction.moment.content }}</p>
+                            <p class="time float_right">{{ transaction.moment.timestamp }}</p>
+                            <div class="clear_float"></div>
+                        </div>
+                    </a>
+                </li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="line"></div>
+    <div id="location" class="container-fluid">
+        <h3>Location</h3>
+        {% if pet_owner == request.user %}
+        <button class="btn btn-sm btn-danger edit_location_btn"> Edit Location Info</button>
+        {% endif %}
+        <div class="col-md-offset-1 pet_location_info">
+            {% for field in PetLocationForm.visible_fields %}
+                <div class="col-sm-12">
+                    <span class="col-sm-3"><label>{{ field.label }} </label></span>
+                    <span class="col-sm-5"> {{ field.value}} </span>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-md-offset-1 col-md-5">
+            <div class="this_pet">
+                <span class="pet_id" style="display:none;">{{pet.id}}</span>
+                <span class="pet_image_url" style="display:none;">/media/{{ pet.pet_avatar}}</span>
+                <span class="lat" style="display:none;">{{pet.latitude}}</span>
+                <span class="lng" style="display:none;">{{pet.longitude}}</span>
+                <span class="name" style="display:none;">{{pet.name}}</span>
+            </div><br><br>
+            <div id="map"></div>
+        </div>
+        <div class="edit_location_info">
+            <form class="edit_location_form" id="edit_location_form" method="post" action="{% url 'pet_profile' pet.id%}">
+                <input class="hidden" name="location">
+                {% for field in PetLocationForm.visible_fields %}
+                    {% if field.name == "pet_address" %}
+                    <div class="col-sm-12">
+                       <span class="col-sm-offset-1 col-sm-2"><label>Street Address </label></span>
+                       <span class="col-sm-5"><input tabindex=1 type="text" id="street_address" class="form-control" name="pet_address" value="{{ field.value}}"></span>
+                       <div style="color: red">{{field.errors}}</div>
+                    </div><br/>
+                    {% else %}
+                    <div class="col-sm-12">
+                       <span class="col-sm-offset-1 col-sm-2"><label>{{ field.label }}</label></span>
+                       <span class="col-sm-5"><input type="{{ field.field.widget.input_type }}" id="{{ field.field.widget.attrs.id }}" class="form-control" name="{{ field.name }}" value="{{ field.value}}"></span>
+                       <div style="color: red">{{field.errors}}</div>
+                    </div><br/>
+                    {% endif %}
+                <div id="error_flag2" class="hidden">{{error_flag2}}</div>
+                {% endfor %}
+                {% csrf_token %}
+                <div class="col-sm-offset-8 col-sm-4" style="margin-top: -30px;"><button class="btn btn-sm btn-danger">Save</button></div>
+            </form>
+        </div>
+    </div>
+</div>
+{% if isLogin == 1 %}
+{% if request.user.username != pet_owner.username %}
+<div class="float col-md-2" id="float">
+    <form action="#" id="request-form">
+        <div class="form-group">
+            <label>From</label>
+            <input id="start_date" type="text" class="form-control" data-date-format="mm/dd/yyyy" placeholder="Start Date">
+        </div>
+        <div class="input-daterange form-group">
+            <label>To</label>
+            <input id="end_date" type="text" class="form-control" data-date-format="mm/dd/yyyy" placeholder="End Date">                
+        </div>
+        <button type="button" id="invite_btn" class="btn btn-primary active center-block">Request to Book
+        </button>
+    </form>
+</div>
+{% endif %}
+{% endif %}
+<input type="hidden" id="petname" value={{ pet.name }}>
+<input type="hidden" id="petid" value={{ pet.id }}>
+<input type="hidden" id="username" value={{ request.user.username }}>
+<input type="hidden" id="petownername" value={{ pet_owner.username }}>
+<input type="hidden" id="launch_chat_url" value={% url 'launchChat' pet_owner.username %}>
+<input type="hidden" id="get_history_chat_url" value={% url 'getHistoryChat' 0 %}>
+</div>
+{% endblock %}
+{% block javaScript %}
+        <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+        <script src="/static/PatPet/js/pet-profile.js"></script>
+        <script src="/static/PatPet/js/messenger.js" ></script>
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+        <script src="/static/PatPet/js/external/jquery.validate.min.js"></script>
+        <script src="/static/PatPet/js/pet-profile-map.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIzGgFgc7Ciut7Jt3muaPaI3VL8Z67kTE&libraries=places&callback=initMap" async defer></script>
+        <script src="/static/PatPet/bootstrap/js/bootstrap-datepicker.js"></script>
+        <script src="/static/PatPet/js/record-video.js"></script>
+        <script src="/static/PatPet/js/external/whammy.min.js"></script>
+        <!--script src="/static/PatPet/js/external/zoom.min.js"></script-->
+        {% load socketio_tags %}
+        {% socketio %}
+{% endblock %}
+{% block messeage_window %}
+    {% if isLogin == 1 %}
+    {% if request.user.username != pet_owner.username %}
+    <button class="launch_chat_btn"></button>
+    <div class="mess_bound hide draggable">
+        <div class="mess_topbar">
+            <button type="button" class="close_btn"></button>
+            <div class="clear"></div>
+        </div>
+        <div class="mess_content">
+            <ul>
+            </ul>
+        </div>
+        <div class="mess_panel">
+            <textarea placeholder="Say Something..."></textarea>
+            <button type="button" class = "send_mess_btn"> Send</button>
+            <button type="button" class = "send_videorequest_btn"></button>
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
+
+{% endblock %}

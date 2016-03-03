@@ -1,0 +1,115 @@
+{% extends "PatPet/base.html" %}
+{% block css %}
+    <link href="/static/PatPet/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/PatPet/bootstrap/css/bootstrap-datepicker.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="/static/PatPet/css/search.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="row" style="width:100%; height: 100%;">
+    <div class="col-md-7">
+        <div id="search">
+            {% for error in errors %}
+            <p class="error">{{error}}</p>
+            {% endfor %}
+            <form class="form-horizontal" id="search-form">
+                <div class="line"></div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Keyword: </label>
+                    <div class="col-md-4">
+                        {{form.q}}
+                        {{form.q.errors}}
+                    </div>
+                </div>
+                <div class="line"></div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Location: </label>
+                    <div class="col-md-4">
+                        {{form.location}}
+                        {{form.location.errors}}
+                    </div>
+                </div>
+                <div class="line"></div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-default" style="float: right">Search</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="list">
+            <ul>
+            {% if query %}
+                {% for result in object_list %}
+                <li>
+                <div class="col-md-6">
+                    <div class="pet">
+                        {{ result.object.person_set.all }}
+                        <span class="pet_id" style="display:none;">{{result.object.id}}</span>
+                        <span class="pet_image_url" style="display:none;">{{result.object.pet_avatar}}</span>
+                        <span class="lat" style="display:none;">{{result.object.latitude}}</span>
+                        <span class="lng" style="display:none;">{{result.object.longitude}}</span>
+                        <span class="name" style="display:none;">{{result.object.name}}</span>
+
+                        <span class="hidden is_third">{{result.object.owner.person_info.is_third}}</span>
+
+                        {% if result.object.owner.person_info.person_avatar %}
+                        <span class="owner_image_url" style="display:none;">{{result.object.owner.person_info.person_avatar}}</span>
+                        {% else %}
+                        <span class="owner_image_url" style="display:none;">person_avatar/default.png</span>
+                        {% endif %}
+                        <p>
+                            <a href="/pet_profile/{{ result.object.id }}">Name: {{ result.object.name }}</a>
+                        </p>
+                        <a href="/pet_profile/{{ result.object.id }}">
+                            <img src="/static/PatPet/images/placeholder.png" class="pet-picture" alt="pets">
+                        </a>
+
+                        <div class="img-circle " >
+                            {%  if result.object.owner.id %}
+                            <a class="owner_url" href="{%url 'person_profile' result.object.owner.id%}">
+                                <img style="display:none;" src="/static/PatPet/images/man.png" class="img-circle owner-picture" alt="pets">
+                            </a>
+                            {% endif %}
+                        </div>
+
+                        <div class="desc">{{ result.object.pet_bio }}
+                            <p>
+                                <span class="type"> {{ result.object.breed }} </span>
+                                <span class="glyphicon glyphicon-star rating">{{ result.object.pet_rating }}</span>
+                                <span class="review">({{ result.object.viewed_times }} clicks)</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                </li>
+                {% empty %}
+                <h3>No results found.</h3>
+                {% endfor %}
+                {% if page.has_previous or page.has_next %}
+                <div>
+                    {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
+                    |
+                    {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+                </div>
+                {% endif %}
+            {% endif %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="map">
+            <!--img alt="home" src="/static/PatPet/images/map.png"-->
+            <div id="map"></div>
+            <div id="coords"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javaScript %}
+    <script src="/static/PatPet/bootstrap/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="/static/PatPet/js/search.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIzGgFgc7Ciut7Jt3muaPaI3VL8Z67kTE&libraries=places&callback=initMap" async defer></script>
+{% endblock %}

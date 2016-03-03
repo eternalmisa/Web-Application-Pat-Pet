@@ -1,0 +1,242 @@
+.basic_info {
+    padding: 5px 5px;
+    box-shadow: 3px 3px 3px #888;
+}
+.basic_info img {
+    width: 180px;
+    height: 180px;
+	margin: auto;
+}
+.profile_pane {
+    margin-top: 10px;
+    background-color: #fafafa;
+    height: auto;
+	box-shadow: 3px 3px 3px #888;
+}
+.edit_profile_btn {
+    width: 80px;
+    float: right;
+	margin-bottom:10px;
+	margin-top:-10px;
+}
+.line {
+	width:100%;
+	height:1px;
+	background-color:#D5D5D5;
+	overflow:hidden;
+	margin-top:5px;
+	margin-bottom:5px;
+}
+.dog_info_table ul {
+    padding: 0;
+    list-style-type: none;
+}
+.dog_info_table {
+    box-shadow: 3px 3px 3px #888;
+
+}
+.pet-names{
+    margin-top:-5px;
+	text-align: center;
+    font-size: 16px;
+}
+.header {
+	height:35px;
+  	line-height: 40px;
+}
+.header strong {
+	color:#777777;
+}
+.pet_panel{
+    width:100%;
+    padding:0;
+	margin-top:10px;
+}
+.pet_panel img{
+    width:150px;
+    height:150px;
+}
+.pet_panel span {
+	margin-left:40%;
+	margin-top:-10px;
+}
+.clear_float {
+    clear: both;
+}
+.grey_background {
+    background-color: #BDBDBD;
+}
+.delete_btn {
+    background: url("../images/ic_action_cancel.png") no-repeat;
+    background-size: 20px 20px;
+    background-position: 0px 0px;
+    border-width: 0;
+    height: 20px;
+    width: 20px;
+    float: right;
+}
+.panel {
+	border-width: 0;
+	background:none;
+}
+.title{
+	margin-left:15px;
+}
+.add_pet_btn{
+    height:30px;
+    width:100px;
+    border-radius: 5px;
+    border-color:#888;
+    position:relative;
+    float: right;
+    margin-top: 10px;
+}
+.short-bio {
+	margin-left:5%;
+	width:80%;
+	height:150px;
+}
+.small_icon {
+    width: 40px;
+    height: 40px;
+}
+.review_panel {
+    height: 100%;
+
+}
+.review_panel ul {
+    padding: 0;
+    list-style-type: none;
+}
+
+.review {
+    margin: 5px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #888;
+    background-color: #fafafa;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+    font-color: #424242;
+    box-shadow: 3px 3px 3px #888;
+}
+.review .user_name {
+    margin-left: 30px;
+}
+
+.preview_photo {
+    height: 80px;
+    width: 80px;
+}
+
+.float_right {
+    float: right;
+}
+
+.history_panel ul {
+    padding: 0;
+    list-style-type: none;
+}
+
+.transaction {
+    padding: 10px;
+    margin: 10px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #888;
+    box-shadow: 3px 3px 3px #888;
+    font-size: 20px;
+}
+.transaction img{
+	width:100px;
+	height:00px;
+}
+.time {
+    font-size: 15px;
+    color: #888;
+}
+.nav-tabs > li > a{
+  border: medium none;
+  color:#888;
+}
+/**/
+.note{
+	margin:5px;
+}
+.note .time {
+    font-size: 13px;
+    color: #888;
+	margin-top:-10px;
+}
+.notes{
+  list-style:none;
+}
+
+.notes a{
+  text-decoration:none;
+  color:#000;
+  background:#FFFDE7;
+  display:block;
+  height:200px;
+  width:200px;
+  padding:1em;
+  -moz-box-shadow:5px 5px 7px rgba(33,33,33,1);
+  -webkit-box-shadow: 5px 5px 7px rgba(33,33,33,.7);
+  box-shadow: 5px 5px 7px rgba(33,33,33,.7);
+  -moz-transition:-moz-transform .15s linear;
+  -o-transition:-o-transform .15s linear;
+  -webkit-transition:-webkit-transform .15s linear;
+}
+.notes {
+  margin:1em;
+  float:left;
+}
+.notes:nth-child(even) a{
+  -o-transform:rotate(4deg);
+  -webkit-transform:rotate(4deg);
+  -moz-transform:rotate(4deg);
+  position:relative;
+  top:5px;
+  background:#F1F8E9;
+}
+.notes:nth-child(3n) a{
+  -o-transform:rotate(-3deg);
+  -webkit-transform:rotate(-3deg);
+  -moz-transform:rotate(-3deg);
+  position:relative;
+  top:-5px;
+  background:#F3E5F5;
+}
+.notes a:hover,.notes a:focus{
+  box-shadow:10px 10px 7px rgba(0,0,0,.7);
+  -moz-box-shadow:10px 10px 7px rgba(0,0,0,.7);
+  -webkit-box-shadow: 10px 10px 7px rgba(0,0,0,.7);
+  -webkit-transform: scale(1.25);
+  -moz-transform: scale(1.25);
+  -o-transform: scale(1.25);
+  position:relative;
+  z-index:5;
+}
+div.transaction2 p {
+	font-size:12px;
+}
+.dog_photo {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    margin: 0px;
+}
+.short-bio p,h1{
+	color: #676b6c;
+}
+#right－content h3{
+    color: #676b6c;
+}
+
+span.rating {
+	color:#FFC107;
+}
+span.review {
+	color: purple;
+    font-style: italic;
+}

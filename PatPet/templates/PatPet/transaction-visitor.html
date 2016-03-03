@@ -1,0 +1,121 @@
+<!doctype html>
+{% extends "PatPet/base.html" %}
+{% block css %}
+<link rel="stylesheet" href="/static/PatPet/css/transaction.css">
+<link rel="stylesheet"  href="/static/PatPet/css/external/zoom.css" media="all" />
+<link href="/static/PatPet/css/external/font-awesome.css" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<h1 class="title">Transaciton for {{activity.pet.name}}</h1>
+<div class="bs-example col-md-offset-1 col-md-10" data-example-id=contextual-panels>
+    <div class="panel panel-primary">
+        <div class=panel-heading>
+            <h3 class=panel-title>Transaction Detail</h3>
+        </div>
+        <div class=panel-body>
+            <div class = "col-md-4">
+                <a href="{%url 'pet_profile' activity.pet.id%}"><img src= "/media/{{activity.pet.pet_avatar}}"id="pet-image" alt="Chania" width="230" height="250"></a>
+            </div>
+            <div class="col-md-8">
+                <table class="table" style="margin-top:20px;">
+                    <tr>
+                        <td>Time</td>
+                        <td>{{activity.status.starttime}}-{{activity.status.endtime}}</td>
+                    </tr>
+                        <td>Status</td>
+                        <td>{{activity.status.statusText}}</td>
+                    <tr>
+                        <td>Pet</td>
+                        <td>{{activity.pet.name}}</td>
+                    </tr>
+                    <tr>
+                        <td>Owner</td>
+                        <td>{{activity.owner.user.username}}</td>
+                    </tr>
+                    <tr>
+                        <td>Renter</td>
+                        <td>{{activity.renter.user.username}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-success">
+        <div class=panel-heading>
+            <h3 class=panel-title>Photos</h3>
+        </div>
+        <div class=panel-body>
+            {% if photos != 'no'%}
+                <ul class="gallery">
+            <!--<li><a href="/static/PatPet/images/husky1.jpg"><img src="/static/PatPet/images/husky1.jpg"/></a></li>-->
+                {% for photo in photos %}
+                    <li><a href="/media/{{photo.moment_photo}}"><img src="/media/{{photo.moment_photo}}" width="150" height="150"></a></li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            {% if photos == 'no'%}
+                <p> There are no photos currently</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="panel panel-info">
+        <div class=panel-heading>
+            <h3 class=panel-title>Videos</h3>
+        </div>
+        <div class=panel-body>
+            {% if videos != 'no' %}
+                <ul class="gallery">
+                {% for video in videos %}
+                    <li> <video src="/media/{{video.moment_video}}" width="220" height="180"controls></video></li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            {% if videos == 'no'%}
+                <p> There are no videos currently</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="panel panel-warning">
+        <div class=panel-heading>
+            <h3 class=panel-title>Happy Moments</h3>
+        </div>
+        <div class=panel-body>
+            <div class="col-md-4">
+                <div class="card card-user" style="margin-left:10%">
+                    <div class="image" style="z-index: 1;">
+                        <img src="/static/PatPet/images/background.jpg" alt="background" style="width:100%;height:250px;z-index: 1;">
+                    </div>
+                    <div class="content" style="z-index: 4;">
+                        <div class="author">
+                            <a href="{%url 'person_profile' renter.id%}">
+                                {%if renter.person_info.is_third == "1"%}
+                                    <img class="avatar border-gray" src="{{renter.person_info.person_avatar}}" alt="profile" style="width:125px;height:125px;margin-top:-50px;margin-left:70%;z-index: 4;">
+                                {% else %}
+                                    <img class="avatar border-gray" src="/media/{{renter.person_info.person_avatar}}" alt="profile" style="width:125px;height:125px;margin-top:-50px;margin-left:70%;z-index: 4;">
+                                {% endif %}
+                                <h4 class="title"><br/><p align="center">{{renter.username}}</p></h4>
+                            </a>
+                        </div>
+                        <p class="description text-center"> {{renter.person_info.person_bio}} <br><br></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-offset-1 col-md-6">
+                <div class="row">
+                    <div class="col-md-11">
+                        <div class="form-group col-md-offset-1">
+                                 <ul class="moment-list list-group" data="{{item.id}}" id = "moment-list-{{activity.id}}">
+                                     {% for content in contents %}
+                                     <li class="list-group-item list-group-item-warning">{{content.content}}</li>
+                                     {% endfor %}
+                                 </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

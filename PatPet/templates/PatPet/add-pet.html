@@ -1,0 +1,143 @@
+<!doctype html>
+{% extends "PatPet/base.html" %}
+{% block css %}
+    <link href="/static/PatPet/css/add-pet.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+   <div class="col-sm-offset-1 col-sm-10 content" >
+        <div class="card wizard-card ct-wizard-orange" id="wizardProfile">
+            <form enctype="multipart/form-data" method="post" action="{% url 'add_pet' %}">
+                <ul>
+                    <li><a href="#about" data-toggle="tab">Basic Information</a></li>
+                    <li><a href="#address" data-toggle="tab">Photos and Videos</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane" id="about">
+                      <div class="row">
+                          <div class="col-sm-3 col-sm-offset-1">
+                             <div class="picture-container">
+                                  <div class="picture">
+                                      <img src="/static/PatPet/images/pet-default-avatar.png" class="picture-src" id="wizardPicturePreview" title=""/>
+                                      <input type="file" id="wizard-picture" name="pet_avatar">
+                                  </div>
+                                  <h6>Choose Picture</h6>
+                              </div>
+                           </div>
+                          <div class="col-sm-7">
+                              <div class="panel panel-default">
+                                 <div class="panel-heading">
+                                    <h3 class="panel-title">About</h3>
+                                 </div>
+                                 <div class="panel-body">
+                                    {% for field in PetBasicForm.visible_fields %}
+                                        {% if not field.name == 'pet_bio' and not field.name == "pet_avatar" %}
+                                        <div class="row">
+                                           <div class="col-md-offset-1 col-md-3"><label>{{ field.label }} <small>(required)</small></label></div>
+                                           <div class="col-md-6"><input type="{{ field.field.widget.input_type }}" class="form-control" name="{{ field.name }}"></div>
+                                        </div><br/>
+                                         {% endif %}
+                                    {% endfor %}
+                                 </div>
+                              </div>
+                              <div class="panel panel-default">
+                                 <div class="panel-heading">
+                                    <h3 class="panel-title">Location</h3>
+                                 </div>
+                                 <div class="panel-body">
+                                    {% for field in PetLocationForm.visible_fields %}
+                                        {% if field.name == "pet_address" %}
+                                        <div class="row">
+                                           <div class="col-md-offset-1 col-md-3"><label>{{ field.label }} <small>(required)</small></label></div>
+                                           <div class="col-md-6"><input tabindex=1 type="text" id="street_address" class="form-control" name="{{ field.name }}"></div>
+                                           <div style="color: red">{{field.errors}}</div>
+                                        </div><br/>
+                                        {% else %}
+                                        <div class="row">
+                                           <div class="col-md-offset-1 col-md-3"><label>{{ field.label }} <small>(required)</small></label></div>
+                                           <div class="col-md-6"><input type="{{ field.field.widget.input_type }}" id="{{ field.field.widget.attrs.id }}" class="form-control" name="{{ field.name }}"></div>
+                                           <div style="color: red">{{field.errors}}</div>
+                                        </div><br/>
+                                        {% endif %}
+                                    {% endfor %}
+                                 </div>
+                              </div>
+                              <div class="panel panel-default">
+                                 <div class="panel-heading">
+                                    <h3 class="panel-title">Biography</h3>
+                                 </div>
+                                 <div class="panel-body">
+                                    {% for field in PetBasicForm.visible_fields %}
+                                        {% if field.name == 'pet_bio' %}
+                                        <div class="row">
+                                              <div class="col-md-offset-1 col-md-3"><label>{{field.label}} <small>(required)</small></label></div>
+                                              <div class="col-md-6"><input type="{{ field.field.widget.input_type }}" class="form-control" name="{{ field.name }}"></div>
+                                        </div><br/>
+                                         {% endif %}
+                                    {% endfor %}
+                                </div>
+                              </div>
+                          </div>
+                       </div>
+                    </div>
+
+                    <div class="tab-pane" id="address">
+                        <div class="row">
+                            <div class="col-sm-offset-1 col-sm-10 main">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">Photos</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        {% for field in PetMediaForm.visible_fields %}
+                                            {% if field.name == 'pet_photo' %}
+                                                {{field}}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">Profile Videos</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        {% for field in PetMediaForm.visible_fields %}
+                                            {% if field.name == 'pet_video' %}
+                                                {{field}}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="wizard-footer">
+                    <div class="pull-right">
+                        <input type="button" class="btn btn-next btn-fill btn-warning btn-wd btn-sm" name="next" value="Next" />
+                        <input type="submit" class="btn btn-finish btn-fill btn-warning btn-wd btn-sm" name="finish" value="Finish"/>
+                    </div>
+                    <div class="pull-left">
+                        <input type="button" class="btn btn-previous btn-fill btn-default btn-wd btn-sm" name="previous" value="Previous" />
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                {% csrf_token %}
+            </form>
+        </div>
+    </div>
+    <br>
+</div>
+{% endblock %}
+{% block javaScript %}
+	<script src="/static/PatPet/js/external/jquery.bootstrap.wizard.js" type="text/javascript"></script>
+	<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+    <script src="/static/PatPet/js/external/jquery.validate.min.js"></script>
+    <!--  methods for manipulating the wizard and the validation -->
+    <script src="/static/PatPet/js/external/zoom.min.js"></script>
+    <script src="/static/PatPet/js/add-pet.js"></script>
+    <script type="text/javascript" src="/static/PatPet/js/auto-complete-address.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIzGgFgc7Ciut7Jt3muaPaI3VL8Z67kTE&libraries=places&callback=initMap" async defer></script>
+{% endblock %}

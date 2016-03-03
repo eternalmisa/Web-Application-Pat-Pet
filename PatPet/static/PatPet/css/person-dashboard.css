@@ -1,0 +1,30 @@
+.container {
+	height: 100%;
+}
+.basic_info {
+    padding: 5px 5px;
+    box-shadow: 3px 3px 3px #888;
+	margin-bottom: 20px;
+}
+.basic_info img {
+    width: 180px;
+    height: 180px;
+}
+
+.message .panel {
+	border-radius:0;
+}
+.message .panel-body {
+	background-color:white;
+}
+.message .panel-heading {
+	height:40px;
+}
+.buttons {
+	float:right;
+	margin-bottom:10px;
+}
+.title {
+	font-size:15px;
+	color:red;
+}

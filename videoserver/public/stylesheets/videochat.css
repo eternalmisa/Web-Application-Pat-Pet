@@ -1,0 +1,53 @@
+#remoteVideo {
+    background-color:#424242;
+    width: 100%;
+    height: 100vh;
+}
+
+#localVideo{
+    position: fixed;
+    right:10vh;
+    bottom:10vh;
+    height: 30vh;
+    width: 40vh;
+
+    margin:5px;
+    border-color:#fafafa;
+    border: 2px solid;
+    border-radius: 5px;
+}
+
+#hangupButton{
+    background: url("/images/ic_action_hangup.png");
+    background-size:80%;
+    background-position:50% 50%;
+    background-repeat:no-repeat;
+
+    position:fixed;
+
+    bottom: 20px;
+    right:50%; 
+    width:60px;
+    height:60px;
+    
+    color: #fafafa;
+    background-color:#c62828;
+    border:0px;
+    border-radius: 30px;
+}
+
+#hangupButton:hover{
+    background-color:#B7171C;
+}
+
+#messageboard{
+    position: fixed;
+    width:100vw;
+    top:50%;
+    color:#fafafa;
+    font-family: Arial, sans-serif;
+}
+#messageboard h1{
+    display: block;
+    text-align:center;
+}

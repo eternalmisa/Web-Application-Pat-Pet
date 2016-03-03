@@ -1,0 +1,30 @@
+doctype html
+html
+  head
+    meta(name='keywords', content='WebRTC, HTML5, JavaScript')
+    |     
+    meta(name='description', content='WebRTC Reference App')
+    |     
+    meta(name='viewport', content='width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1')
+    |     
+    link(href='/stylesheets/videochat.css', rel='stylesheet')
+    script(src='/javascripts/jquery.js')
+    base(target='_blank')
+    title WebRTC client
+  body
+    #container
+      #videos
+        #messageboard 
+          h1
+        |     
+        video#localVideo(autoplay='', muted='')
+        |     
+        video#remoteVideo(autoplay='')
+        |     
+        button#hangupButton
+        |     
+        input#roomid(type='hidden', value!= roomid)
+      script( src='/javascripts/socket.io.js')
+      script(src='/javascripts/lib/adapter.js')
+      script(src='/javascripts/main.js')
+

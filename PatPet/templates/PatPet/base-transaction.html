@@ -1,0 +1,100 @@
+<!doctype html>
+{% extends "PatPet/base.html" %}
+{% block css %}
+<link rel="stylesheet" href="/static/PatPet/css/transaction.css">
+<link rel="stylesheet"  href="/static/PatPet/css/external/zoom.css" media="all" />
+<link href="/static/PatPet/css/external/font-awesome.css" rel="stylesheet" />
+{% endblock %}
+    
+{% block content %}
+    <div class= "board">
+      <div class="col-md-offset-2 col-md-3"><!--/media/{{ transaction.pet.pet_avatar }}-->
+        <a href="{%url 'pet_profile' activity.pet.id%}"><img src= "/media/{{activity.pet.pet_avatar}}"id="pet-image" alt="Chania" width="230" height="250"></a>
+      </div>
+      <div class="col-md-4">
+         <div class="card">
+            <div class="header">
+               <center><h3 class="title">Transaction Detail</h3></center>
+            </div>
+            <div >
+               <table class="table table-hover table-striped" align="center">
+                  <tr>
+                    <td bgcolor="#5BCAFF">Time</td>
+                    <td>{{activity.status.starttime}}-{{activity.status.endtime}}</td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#5BCAFF">Status</td>
+                    <td>{{activity.status.statusText}}</td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#5BCAFF">Pet</td>
+                    <td>{{activity.pet.name}}</td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#5BCAFF">Owner</td>
+                    <td>{{activity.owner.user.username}}</td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#5BCAFF">Renter</td>
+                    <td>{{activity.renter.user.username}}</td>
+                  </tr>
+                 </table>
+             </div>
+          </div>
+       </div>
+       <div class="col-md-1">
+          <button  class="btn btn-danger" style="margin-top:207px">Save</button>
+       </div>
+    </div>
+    <nav class="navbar navbar-inverse" id="bar2" style="margin-left:400px">
+       <div class="container-fluid">
+         <div class="navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+               <li><a href="#section1">Photos</a></li>
+               <li><a href="#section2">Videos</a></li>
+               <li><a href="#section3">Happy moments</a></li>
+               <li><a href="#section4">Rate & Review</a></li>
+            </ul>
+         </div>
+       </div>
+    </nav>
+    <div class="content col-md-offset-1 col-md-10" id="section1" style="padding-top:20px">
+       <div class="panel panel-default" >
+          <div class="panel-heading ">
+            <h2 class="panel-title"><center>Photos</center></h2>
+          </div>
+          {% block photo %} {% endblock %}
+       </div>
+    </div>
+     <div class="content col-md-offset-1 col-md-10" id="section2">
+       <div class="panel panel-default" >
+         <div class="panel-heading ">
+            <h2 class="panel-title"><center>Videos</center></h2>
+         </div>
+           {% block video %}{% endblock %}
+       </div>
+     </div>
+     <div class="content col-md-offset-1 col-md-10" id="section3">
+       <div class="panel panel-default">
+          <div class="panel-heading ">
+             <h2 class="panel-title"><center>Happy Moments</center></h2>
+          </div>
+          {% block moment %}{% endblock %}
+      </div>
+    </div>
+
+<div class="content col-md-offset-1 col-md-10" id="section4">
+     <div class="panel panel-default">
+         <div class="panel-heading ">
+             <h2 class="panel-title"><center>Review & Rate(About the Renter)</center></h2>
+         </div>
+         {% block review %}{% endblock %}
+     </div>
+</div>
+{% block button%} {%endblock%}
+
+{% endblock %}
+{% block javaScript %}
+    <script src="/static/PatPet/js/transaction.js"></script>
+    <script src="/static/PatPet/js/external/zoom.min.js"></script>
+{% endblock %}

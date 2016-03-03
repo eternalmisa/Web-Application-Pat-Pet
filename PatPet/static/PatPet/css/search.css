@@ -1,0 +1,118 @@
+.navbar-brand {
+	width:70px;
+	height:70px;
+	margin-top:-10px;
+	margin-bottom:-10px;
+}
+.line {
+	width:100%;
+	height:1px;
+	background-color:#D5D5D5;
+	overflow:hidden;
+	margin-top:5px;
+	margin-bottom:10px;
+}
+.sort {
+	position:absolute;
+	width:100%;	
+}
+.checkbox {
+	display: inline-block;
+	cursor: pointer;
+	margin-right:10px; 
+	line-height:18px;
+}
+input[type=checkbox] {
+	display:none; 
+}
+.checkbox:before {
+	content: "";
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	vertical-align:middle;
+	background-color:#F77E46;
+	color: #f3f3f3;
+	text-align: center;
+	border-radius: 3px;
+}
+input[type=checkbox]:checked + .checkbox:before {
+	content: "\2713";
+	font-size: 15px;
+}
+div.pet {
+    text-align: center;
+	background-color:#E5E5E5;
+}
+div.list {
+	padding-top:50px;
+}
+
+div.list li{
+    display:inline
+}
+.pet-picture {
+    display: inline;
+    margin: 5px;
+	width:90%;
+	height:60%;
+    border: 1px solid #ffffff;
+}
+.owner-picture {
+	width:25%;
+	height:25%;
+	margin-top: -30px;
+	margin-left: 70%;
+    border: 2px solid;
+    border-color:#fafafa;
+
+}
+
+div.desc {
+    text-align: center;
+	font-family:Constantia, "Lucida Bright", "DejaVu Serif", Georgia, serif;
+    margin: 5px;
+}
+span.type {
+	color:#9E9E9E;
+}
+span.rating {
+	color:#FFC107;
+}
+span.review {
+	color:#9E9E9E;
+}
+.map {
+    border: 3px solid #333;
+    border-radius: 0;
+	position: fixed;
+	width:40%;
+	right:0;
+	top:50px;
+}
+
+#map{
+    height:90vh;
+}
+/* Add */
+.form-group button {
+	background-color: #ff5a5f;
+	color: #ffffff;
+	font-size: 14px;
+	border: 0;
+	height: 30px;
+}
+.error{
+	color:#DD0000;
+	margin-left: 20px;
+}
+
+.small_pet_photo{
+    width:90px;
+    height:60px;
+}
+
+.info_window{
+    font-family:sans-serif;
+}
+

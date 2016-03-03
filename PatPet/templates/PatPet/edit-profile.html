@@ -1,0 +1,125 @@
+<!doctype html>
+{% extends "PatPet/base.html" %}
+{% block css %}
+    <link href="/static/PatPet/css/edit-profile.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    <form id="submitForm" enctype="multipart/form-data" method="POST" action="{% url 'edit_profile' %}">
+        <div class="profile-avatar col-md-offset-1 col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Profile Photos</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="picture-container">
+                        <div class="picture">
+                            {%for field in EditPersonInfoForm.visible_fields%}
+                              {% if field.label == 'avatar'%}
+                            {%if request.user.person_info.is_third == "1"%}
+                                <img src="{{request.user.person_info.person_avatar }}" class="picture-src" id="wizardPicturePreview2" title=""/>
+                            {% else %}
+                                 <img src="{{ request.user.person_info.person_avatar.url}}" class="picture-src" id="wizardPicturePreview" title=""/>
+                            {% endif %}
+                              <input type = "{{field.field.widget.input_type}}"  id="wizard-picture" name = {{field.name}}>
+                              {% endif %}
+                              {% endfor %}
+                        </div>
+                        <h6>Choose Picture</h6>
+                    </div>
+                     <div class="camera">
+                     <button type="button" class="btn glyphicon glyphicon-camera" id="takephoto"></button>
+                     <div id="capture" style="display: none;">
+                         <video id="snapshot"></video>
+                         <button type="button" class="btn btn-default btn-sm" id="take">Capture</button>
+                         <button type="button" class="btn btn-default btn-sm" id="cancel">Cancel</button>
+                     </div>
+                      <canvas id="canvas" style="display:none;"></canvas>
+                         <input type="hidden" id="url" value="/edit_profile/">
+                  </div>
+                </div>
+            </div>
+        </div>
+    	<div class="profile-info col-md-7">
+          <div class="panel panel-default">
+             <div class="panel-heading">
+                <h3 class="panel-title">Name</h3>
+             </div>
+             <div class="panel-body">
+                 <p class = 'errors'></p>
+             	{% for field in EditUserForm.visible_fields %}
+                 <div class="row">
+                    <div class="col-md-offset-1 col-md-3">
+                    	<label class = "profile-lable">{{ field.label }} <small>(required)</small></label>
+                    </div>
+                    <div class="col-md-6"><input type="{{ field.field.widget.input_type }}"  class="form-control" value="{{field.value}}" id="{{field.name}}" name="{{ field.name }}"></div>
+                 </div><br/>
+                 {% endfor %}
+             </div>
+          </div>
+          
+          <div class="panel panel-default">
+             <div class="panel-heading">
+                <h3 class="panel-title">Contact Address</h3>
+             </div>
+             <div class="panel-body">
+             	{% for field in EditPersonInfoForm.visible_fields %}
+                	{% if field.name == 'address' or field.name == 'state' or field.name == 'city' or field.name == 'zipcode' %}
+                         {% if field.name == "address" %}
+                            <div class="row">
+                               <div class="col-md-offset-1 col-md-3"><label>{{ field.label }} <small>(required)</small></label></div>
+                               <div class="col-md-6"><input tabindex=1 type="text" id="street_address" class="form-control" placeholder="{{field.value}}" value="{{field.value}}" name="{{ field.name }}"></div>
+                               <div style="color: red">{{field.errors}}</div>
+                            </div><br/>
+                            {% else %}
+                            <div class="row">
+                               <div class="col-md-offset-1 col-md-3"><label>{{ field.label }} <small>(required)</small></label></div>
+                               <div class="col-md-6"><input type="{{ field.field.widget.input_type }}" id="{{ field.field.widget.attrs.id }}" class="form-control" value="{{field.value}}" name="{{ field.name }}"></div>
+                            </div><br/>
+                        {% endif %}
+                   {% endif %}
+                 {% endfor %}
+          	 </div>
+          </div>
+          <div class="panel panel-default">
+             <div class="panel-heading">
+                <h3 class="panel-title">Others</h3>
+             </div>
+             <div class="panel-body">
+             	{% for field in EditPersonInfoForm.visible_fields %}
+                	{% if field.name == 'phoneNum' or field.label == 'Gender' or field.label == 'Birthday' or field.label = 'Bio'%}
+                         <div class="row">
+                            <div class="col-md-offset-1 col-md-3">
+                                <label class = "profile-lable">{{ field.label }}</label>
+                            </div>
+                            <div class="col-md-6">{{ field }}</div>
+                         </div><br/>
+                     {% endif %}
+                 {% endfor %}
+          </div>
+        </div>
+        <button type="button" id="upload" class="btn btn-danger center-block">Save</button>
+        {% if success %}
+            <div class="alert alert-success alert-dismissible error" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+                <strong>Congratulation!  </strong> {{success}}
+            </div>
+        {% endif %}
+      </div>
+       {% csrf_token %}
+    </form>
+</div>
+{% endblock %}
+{% block javaScript %}
+
+	<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+        <script src="/static/PatPet/js/edit-profile.js"></script>
+    <script src="/static/PatPet/js/snapshot.js"></script>
+    <script src="/static/PatPet/js/upload-snapshot.js"></script>
+    <script type="text/javascript" src="/static/PatPet/js/auto-complete-address.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIzGgFgc7Ciut7Jt3muaPaI3VL8Z67kTE&libraries=places&callback=initMap" async defer></script>
+
+{% endblock %}
+

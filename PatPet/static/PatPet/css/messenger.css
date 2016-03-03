@@ -1,0 +1,209 @@
+.hide{
+    visibility: hidden;
+}
+.mess_bound{
+    z-index:100;
+    position: fixed;
+    right: 50px;
+    bottom: 50px;
+    height: 500px;
+    width: 500px;
+    border: 3px solid #E5E5E5;
+    border-radius: 5px;
+    padding:0px;
+}
+
+.mess_topbar{
+    margin:0px;
+    height:10%; 
+	background-color:rgba(63, 81, 181, 0.8);
+    border-radius: 5px 5px 0px 0px;
+}
+
+.mess_topbar .close_btn{
+    float: right;
+    height: 40px;
+    width: 40px;
+    background: url("../images/ic_close_btn.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    border: 0px;
+}
+
+.mess_content{
+    margin:0px;
+    height:70%; 
+	background-color:rgba(63, 81, 181, 0.2);
+    overflow:auto;
+    padding:10px;
+}
+
+.mess_panel{
+    margin:0px;
+    height:20%; 
+	background-color:rgba(250,250,250,0.5);
+    border-radius: 0px 0px 5px 5px;
+    padding: 5px;
+}
+
+.mess_panel textarea{
+    resize: none;
+    width: 100%;
+    height: 60%;
+    border: 0px ;
+	background-color:rgba(250,250,250,0.5);
+    font-family:sans-serif;
+}
+
+.mess_panel textarea:focus{
+    outline:none;
+}
+
+.mess_panel .send_mess_btn{
+    float: right;
+    font-family: sans-serif;
+    color: #fafafa;
+    width: 15%;
+    height: 40%;
+	background-color:rgba(63, 81, 181, 0.8);
+    border: 0px;
+    border-radius: 5px;
+    margin-left:4px;
+    margin-right:4px;
+}
+
+.mess_panel .send_videorequest_btn{
+
+    margin-left:4px;
+    margin-right:4px;
+
+    background: url("../images/ic_action_video.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+
+    float: right;
+    font-family: sans-serif;
+    color: #fafafa;
+    width: 12%;
+    height: 40%;
+	background-color:rgba(63, 81, 181, 0.8);
+    border: 0px;
+    border-radius: 5px;
+}
+
+.mess_panel .send_mess_btn:disabled{
+	background-color:rgba(63, 81, 181, 0.5);
+}
+
+
+.conversation_bubble1 {
+    display:inline-block;
+    margin:5px;
+    padding: 5px;
+    border: 2px solid #424242;
+    color: #333;
+    background-color: rgba(205, 220, 57, 0.8) ;
+    border-radius: 5px;
+    font-family: sans-serif;
+    font-size: 18px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.conversation_bubble1:after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 28px;
+    border-width: 13px 13px 0;
+    border-style: solid;
+    border-color: #CDDC39 transparent;
+    display: block;
+    width: 0;
+}
+
+.conversation_bubble1:before {
+    content: "";
+    position: absolute;
+    bottom: -9px;
+    left: 25px;
+    border-width: 16px 16px 0;
+    border-style: solid;
+    border-color: #424242 transparent;
+    display: block;
+    width: 0;
+}
+.conversation{
+    position: relative;
+    margin-bottom: 17px;
+   
+}
+
+.conversation_bubble2 {
+    float:right;
+    display:inline-block;
+    margin:5px;
+    padding: 5px;
+    border: 2px solid #424242;
+    color: #333;
+    background: #fff;
+    border-radius: 5px;
+    font-family: sans-serif;
+    font-size: 18px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.conversation_bubble2:after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    right: 28px;
+    border-width: 13px 13px 0;
+    border-style: solid;
+    border-color: #fff transparent;
+    display: block;
+    width: 0;
+}
+
+.conversation_bubble2:before {
+    content: "";
+    position: absolute;
+    bottom: -9px;
+    right: 25px;
+    border-width: 16px 16px 0;
+    border-style: solid;
+    border-color: #424242 transparent;
+    display: block;
+    width: 0;
+}
+
+.clear{
+    clear:both;
+}
+
+
+ul{
+    list-style-type:none;
+    margin:0px;
+    padding:0px;
+}
+
+.launch_chat_btn{
+    position:fixed;
+    z-index:100;
+    right: 20px;
+    bottom:20px;
+    width:80px;
+    height:80px;
+    background: url("../images/ic_action_mail.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+	background-color:rgba(63, 81, 181, 0.8);
+    border-radius:40px;
+}
+
+.message-btn{
+    margin: 5px;
+    border-width:0px;
+    border-radius:5px;
+}

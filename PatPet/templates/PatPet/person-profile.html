@@ -1,0 +1,228 @@
+<!doctype html>
+{% extends "PatPet/base.html" %}
+{% block css %}
+    <link rel="stylesheet" href="/static/PatPet/css/messenger.css">
+    <link href="/static/PatPet/css/person-profile.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="col-md-3">
+    <div class="basic_info">
+        {%if info.is_third == "1"%}
+            <img src="{{info.person_avatar }}" class="center-block">
+        {% else %}
+            <img src="/media/{{info.person_avatar}}" class="center-block">
+        {% endif %}
+        <p style="text-align:center">
+            <span class="glyphicon glyphicon-star rating ">{{rating}}</span>
+        </p>
+        <div class="profile_pane">
+            <table class="table table-striped">
+                <caption class="text-center grey_background"><strong>Personal Information</strong></caption>
+                <tr>
+                    <td><span class="glyphicon glyphicon-menu-hamburger"><small> Name:</small></span></td>
+                    <td><small><strong>{{info.user.username}}</strong></small></td>
+                </tr>
+                <tr>
+                    <td><span class="glyphicon glyphicon-map-marker"><small> Location:</small></span></td>
+                    <td><small><strong>{%if info.address != ''%}{{info.address}},{% endif %} {{info.city}},{{info.state}} {{info.zipcode}}</strong></small></td>
+                </tr>
+                <tr>
+                    <td><span class="glyphicon glyphicon-phone-alt"><small> Phone</small></span></td>
+                    <td><small><strong>{{info.phoneNum}}</strong></small></td>
+                </tr>
+                <tr>
+                    <td><span class="glyphicon glyphicon-envelope"><small> E-mail</small></span></td>
+                    <td><small><strong>{{info.user.email}}</strong></small></td>
+                </tr>
+            </table>
+            {% if info.user == request.user%}
+            <button class="btn btn-sm btn-danger edit_profile_btn" onclick="location.href='{% url 'edit_profile'%}';" > Edit </button>
+            {% endif %}
+        </div>
+        <div class="line"></div>
+        <div class="dog_info_table">
+            <div class="header text-center grey_background"><strong>Pets List</strong></div>
+            <ul>
+                {% for pet in petlist %}
+                <li>
+                    <div class="pet_panel">
+                        <a href="{% url 'pet_profile' pet.id %}"><img src="/media/{{pet.pet_avatar}}" class="img-rounded center-block"></a>
+                        <div class="pet-names">
+                            <a href="{% url 'pet_profile' pet.id %}">{{pet.name}}</a>
+                            {% if pet.owner ==  request.user%}
+                            <button class="delete_btn" onclick="location.href='{% url 'delete_pet' pet.id %}';">
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% if info.user == request.user %}
+        <button class="btn btn-sm btn-danger add_pet_btn" onclick="location.href='{% url 'add_pet'%}';">Add Your Pet +</button><br/><br/>
+        {% endif %}
+    </div>
+</div>
+<div class="col-md-9">
+    <div class="short-bio">
+        <h1>Hi, I am {{info.user.username}}!</h1>
+        <p>{{info.person_bio}}
+        </p>
+        <div class="clear_float"></div>
+    </div>
+</div>
+<div class="col-md-9" id="right－content">
+    <div class="col-md-8 review_panel">
+        <div class="panel panel-default">
+            <h3 class="title">Reviews</h3>
+            <p style="color:#9E9E9E ;margin-left:5%">{{reviews_num}} reviews</p>
+            <div class="panel-body">
+                <div class="togglable-tabs">
+                    <ul id="myTabs" class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#pet-review" id="pet-review-tab" role="tab" data-toggle="tab" aria-controls="pet-review" aria-expanded="true">Reviews as Owner</a></li>
+                        <li role="presentation"><a href="#owner-review" role="tab" id="owner-review-tab" data-toggle="tab" aria-controls="owner-review">Reviews as Renter</a></li>
+                    </ul>
+                <div id="myTabContent" class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade in active" id="pet-review" aria-labelledBy="home-tab">
+                        <ul>
+                            {% for review in reviews_as_owner %}
+                            <li>
+                               <div class="row review">
+                                    <div class="col-md-2">
+                                        <a href="{% url 'person_profile' review.commenter.id %}">
+                                            {%if review.commenter.person_info.is_third == "1"%}
+                                                  <img src="{{review.commenter.person_info.person_avatar}}" class="img-circle preview_photo">
+                                            {% else %}
+                                                  <img src="/media/{{review.commenter.person_info.person_avatar}}" class="img-circle preview_photo">
+                                             {% endif %}
+                                        <p class="user_name col-sm-offset-3">{{review.commenter.username}}</p></a>
+                                    </div>
+                                    <div class="review_content col-md-10">
+                                    <div class="grumble_text">
+                                        {{review.content}}
+                                    </div>
+                                    <div class="float_right time">{{review.timestamp}}</div>
+                                    <div class="clear_float"></div>
+                                   </div>
+                               </div>
+                            </li>
+                            {% endfor %}
+
+                        </ul>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="owner-review" aria-labelledBy="profile-tab">
+                        <ul>
+                            {% for review in reviews_as_renter %}
+                            <li><div class="row review">
+                                    <div class="col-md-2">
+                                       <a href="{% url 'person_profile' review.commenter.id %}">
+                                           {%if review.commenter.person_info.is_third == "1"%}
+                                                  <img src="{{review.commenter.person_info.person_avatar}}" class="img-circle preview_photo">
+                                            {% else %}
+                                                  <img src="/media/{{review.commenter.person_info.person_avatar}}" class="img-circle preview_photo">
+                                             {% endif %}
+                                       <p class="user_name col-sm-offset-3">{{review.commenter.username}}</p></a>
+                                    </div>
+                                    <div class="review_content col-md-10">
+                                        <div class="grumble_text">
+                                          {{review.content}}
+                                        </div>
+                                        <div class="float_right time">{{review.timestamp}}</div>
+                                        <div class="clear_float"></div>
+                                    </div>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+    <div class="col-md-4 history_panel">
+        <h3 class="title">Transactions</h3>
+        <div class="note">
+            <ul class="notes">
+                {% for transaction in transactions %}
+                <li class="notes">
+                    {% if request.user == transaction.owner.user %}
+                    <a href="{% url 'transaction_owner' transaction.id%}">
+                         <div class="transaction2">
+                            <!-- 所有图片直接像这样call image field就好-->
+                            <img src="/media/{{ transaction.pet.pet_avatar }}" class="dog_photo">
+                            <p>{{transaction.moment.content}}</p>
+                            <p class="time float_right">{{transaction.moment.timestamp}}</p>
+                            <div class="clear_float"></div>
+                        </div>
+                    </a>
+                    {% endif %}
+                    {% if request.user == transaction.renter.user %}
+                    <a href="{% url 'transaction_renter' transaction.id%}">
+                         <div class="transaction2">
+                            <img src="/media/{{ transaction.pet.pet_avatar }}" class="dog_photo">
+                            <p>{{transaction.moment.content}}</p>
+                            <p class="time float_right">{{transaction.moment.timestamp}}</p>
+                            <div class="clear_float"></div>
+                        </div>
+                    </a>
+                    {% endif %}
+                    {% if request.user != transaction.owner.user and request.user != transaction.renter.user %}
+                    <a href="{% url 'transaction_visitor' transaction.id%}">
+                        <div class="transaction2">
+                            <img src="/media/{{ transaction.pet.pet_avatar }}" class="dog_photo">
+                            <p>{{transaction.moment.content}}</p>
+                            <p class="time float_right">{{transaction.moment.timestamp}}</p>
+                            <div class="clear_float"></div>
+                        </div>
+                    {% endif %}
+                    </a>
+                </li>
+               {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javaScript %}
+	{% load socketio_tags %}
+        {% socketio %}
+        <script type="text/javascript" src="/static/PatPet/js/person-profile.js"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+        <script src="/static/PatPet/js/messenger.js" ></script>
+        
+{% endblock %}
+{% block messeage_window %}
+    <input type="hidden" id="username" value={{ request.user.username }}>
+    <input type="hidden" id="launch_chat_url" value={% url 'launchChat' info.user.username %}></input>
+    <input type="hidden" id="get_history_chat_url" value={% url 'getHistoryChat' 0 %}></input>
+
+    {% if isLogin == 1 %}
+    {% if request.user.username != info.user.username %}
+    <button class="launch_chat_btn"></button>
+    <div class="mess_bound hide draggable">
+        <div class="mess_topbar">
+            <button type="button" class="close_btn"></button>
+            <div class="clear"></div>
+        </div>
+        <div class="mess_content">
+            <ul>
+            <!--li>
+                 <div class="conversation">                              
+                     <div class="conversation_bubble1">.....</div> 
+                     <div class="clear"></div>
+                 </div>
+            </li-->
+            </ul>
+        </div>
+        <div class="mess_panel">
+            <textarea placeholder="Say Something..."></textarea>
+            <button type="button" class = "send_mess_btn"> Send</button>
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
+{% endblock %}
